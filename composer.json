@@ -1,0 +1,25 @@
+{
+	"name": "w7/rangine-lock",
+	"description": "Rangine Lock",
+	"keywords": [
+		"rangine",
+		"lock"
+	],
+	"license": "Apache-2.0",
+	"require": {
+		"php": ">=7.2",
+		"w7/rangine": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"W7\\Lock\\": "src/"
+		}
+	},
+	"extra": {
+		"rangine": {
+			"providers": [
+				"W7\\Lock\\ServiceProvider"
+			]
+		}
+	}
+}
