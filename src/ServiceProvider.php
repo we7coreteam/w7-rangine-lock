@@ -10,12 +10,10 @@ class ServiceProvider extends ProviderAbstract {
 	}
 
 	protected function registerLockManager() {
-		$this->container->set('lock-manager', function () {
-			$lockManager = new LockManager();
+		$this->container->set('lock-factory', function () {
+			$lockFactory = new LockFactory();
 
-			$lockManager->registerLockerResolver('redis', function () {
 
-			});
 		});
 	}
 }
