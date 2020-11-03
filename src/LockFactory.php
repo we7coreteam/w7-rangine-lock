@@ -12,7 +12,7 @@
 
 namespace W7\Lock;
 
-use W7\Lock\Exception\LockChannelNotSupport;
+use W7\Lock\Exception\LockChannelNotSupportException;
 use W7\Lock\Handler\HandlerAbstract;
 
 class LockFactory {
@@ -38,7 +38,7 @@ class LockFactory {
 	public function getLock($name, $seconds, $owner = null) {
 		$channel = $this->defaultChannel;
 		if (empty($this->channelsConfig[$channel])) {
-			throw new LockChannelNotSupport($channel);
+			throw new LockChannelNotSupportException($channel);
 		}
 
 		/**
