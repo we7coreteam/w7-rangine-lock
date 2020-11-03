@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * Rangine Lock
+ *
+ * (c) We7Team 2019 <https://www.rangine.com>
+ *
+ * document http://s.w7.cc/index.php?c=wiki&do=view&id=317&list=2284
+ *
+ * visited https://www.rangine.com for more details
+ */
+
 namespace W7\Lock;
 
-use Closure;
 use W7\Lock\Exception\LockChannelNotSupport;
 use W7\Lock\Handler\HandlerAbstract;
 
@@ -26,7 +35,7 @@ class LockFactory {
 		return $lockFactory;
 	}
 
-	public function getLocker($name, $seconds, $owner = null) {
+	public function getLock($name, $seconds, $owner = null) {
 		$channel = $this->defaultChannel;
 		if (empty($this->channelsConfig[$channel])) {
 			throw new LockChannelNotSupport($channel);
@@ -36,6 +45,8 @@ class LockFactory {
 		 * @var HandlerAbstract $handler
 		 */
 		$handler = $this->channelsConfig[$channel]['driver'];
-		return $handler::getHandler($name, $seconds, $owner, $this->channelsConfig[$channel]);
+		$handler = $handler::getHandler($this->channelsConfig[$channel]);
+
+		return new Lock($handler, $name, $seconds, $owner);
 	}
 }

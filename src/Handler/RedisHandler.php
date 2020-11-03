@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Rangine Lock
+ *
+ * (c) We7Team 2019 <https://www.rangine.com>
+ *
+ * document http://s.w7.cc/index.php?c=wiki&do=view&id=317&list=2284
+ *
+ * visited https://www.rangine.com for more details
+ */
+
 namespace W7\Lock\Handler;
 
 use Psr\SimpleCache\CacheInterface;
@@ -11,50 +21,52 @@ class RedisHandler extends HandlerAbstract {
 	 */
 	protected $redis;
 
-	public function __construct(CacheInterface $cache, $name, $seconds, $owner = null) {
-		parent::__construct($name, $seconds, $owner);
+	public function __construct(CacheInterface $cache) {
 		$this->redis = $cache;
 	}
 
-	public static function getHandler($name, $seconds, $owner = null, array $config = []): HandlerAbstract {
-		return new static(Cache::channel($config['redis_channel'] ?? null), $name, $seconds, $owner);
+	public static function getHandler(array $config = []): HandlerAbstract {
+		return new static(Cache::channel($config['redis_channel'] ?? 'default'));
 	}
 
 	/**
+	 * @param $name
+	 * @param $owner
+	 * @param int $seconds
 	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function acquire() {
-		if ($this->seconds > 0) {
-			return $this->redis->eval(LuaScripts::acquireLock(), [$this->name, $this->owner, $this->seconds], 1) == 1;
+	public function acquire($name, $owner, $seconds = 0) {
+		if ($seconds > 0) {
+			return $this->redis->eval(LuaScripts::acquireLock(), [$name, $owner, $seconds], 1) == 1;
 		} else {
-			return $this->redis->setnx($this->name, $this->owner) == true;
+			return $this->redis->setnx($name, $owner) == true;
 		}
 	}
 
 	/**
-	 * Release the lock.
-	 *
-	 * @return bool
+	 * @param $name
+	 * @param $owner
+	 * @return bool|void
 	 */
-	public function release() {
-		return (bool) $this->redis->eval(LuaScripts::releaseLock(), [$this->name, $this->owner], 1);
+	public function release($name, $owner) {
+		return (bool) $this->redis->eval(LuaScripts::releaseLock(), [$name, $owner], 1);
 	}
 
 	/**
-	 * Releases this lock in disregard of ownership.
+	 * @param $name
 	 *
 	 * @return void
 	 */
-	public function forceRelease(){
-		$this->redis->del($this->name);
+	public function forceRelease($name) {
+		$this->redis->del($name);
 	}
 
 	/**
-	 * @return mixed|string|null
+	 * @param $name
+	 * @return bool|mixed|string
 	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getCurrentOwner() {
-		return $this->redis->get($this->name);
+	public function getCurrentOwner($name) {
+		return $this->redis->get($name);
 	}
 }

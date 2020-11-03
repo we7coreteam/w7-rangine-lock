@@ -10,6 +10,9 @@
 		"php": ">=7.2",
 		"w7/rangine": "*"
 	},
+	"require-dev": {
+		"w7/php-cs-fixer": "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"W7\\Lock\\": "src/"
