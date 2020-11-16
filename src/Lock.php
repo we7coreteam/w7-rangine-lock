@@ -14,10 +14,11 @@ namespace W7\Lock;
 
 use Illuminate\Support\InteractsWithTime;
 use Illuminate\Support\Str;
-use W7\Lock\Exception\LockTimeoutException;
+use W7\Contract\Lock\LockInterface;
+use W7\Contract\Lock\LockTimeoutException;
 use W7\Lock\Handler\HandlerAbstract;
 
-class Lock implements \Illuminate\Contracts\Cache\Lock {
+class Lock implements LockInterface {
 	use InteractsWithTime;
 
 	protected $name;

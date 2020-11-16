@@ -12,6 +12,7 @@
 
 namespace W7\Lock;
 
+use W7\Contract\Lock\LockFactoryInterface;
 use W7\Core\Provider\ProviderAbstract;
 use W7\Lock\Handler\RedisHandler;
 
@@ -21,7 +22,7 @@ class ServiceProvider extends ProviderAbstract {
 	}
 
 	protected function registerLockFactory() {
-		$this->container->set('lock-factory', function () {
+		$this->container->set(LockFactoryInterface::class, function () {
 			$handlerConfig = $this->config->get('handler.lock', []);
 			$handlerConfig['redis'] = RedisHandler::class;
 

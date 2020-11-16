@@ -12,18 +12,10 @@
 
 namespace W7\Lock\Facade;
 
-use W7\Core\Facades\FacadeAbstract;
-use W7\Lock\Lock;
-
 /**
+ * @deprecated
  * Class LockFactory
  * @package W7\Lock\Facade
- *
- * @method static \W7\Lock\LockFactory channel($channel = 'default');
- * @method static Lock getLock($name, $seconds, $owner = null);
  */
-class LockFactory extends FacadeAbstract {
-	protected static function getFacadeAccessor() {
-		return 'lock-factory';
-	}
+class LockFactory extends \W7\Facade\Lock {
 }

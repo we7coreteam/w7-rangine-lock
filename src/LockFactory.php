@@ -12,10 +12,12 @@
 
 namespace W7\Lock;
 
-use W7\Lock\Exception\LockChannelNotSupportException;
+use W7\Contract\Lock\LockFactoryInterface;
+use W7\Contract\Lock\LockInterface;
+use W7\Contract\Lock\LockChannelNotSupportException;
 use W7\Lock\Handler\HandlerAbstract;
 
-class LockFactory {
+class LockFactory implements LockFactoryInterface {
 	protected $defaultChannel;
 	protected $channelsConfig;
 
@@ -35,7 +37,7 @@ class LockFactory {
 		return $lockFactory;
 	}
 
-	public function getLock($name, $seconds, $owner = null) {
+	public function getLock($name, $seconds, $owner = null) : LockInterface {
 		$channel = $this->defaultChannel;
 		if (empty($this->channelsConfig[$channel])) {
 			throw new LockChannelNotSupportException($channel);
